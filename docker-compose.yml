@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  # =============================================
+  # AUTHENTICATION NETWORK - Isolated
+  # =============================================
+
+  authenticationDB:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: authentication
+    volumes:
+      - auth_data:/var/lib/mysql
+    networks:
+      - auth_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: on-failure
+
+  authentication:
+    build:
+      context: ./authentication
+      dockerfile: Dockerfile
+    depends_on:
+      authenticationDB:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@authenticationDB/authentication
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    ports:
+      - "5000:5000"
+    networks:
+      - auth_network
+    restart: on-failure
+
+  # =============================================
+  # STORE NETWORK - Isolated
+  # =============================================
+
+  storeDB:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: store
+    volumes:
+      - store_data:/var/lib/mysql
+    networks:
+      - store_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: on-failure
+
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: --accounts 10 --networkId 5777 --gasPrice 1 --deterministic --host 0.0.0.0
+    ports:
+      - "8545:8545"
+    networks:
+      - store_network
+    restart: on-failure
+
+  owner:
+    build:
+      context: ./applications/owner
+      dockerfile: Dockerfile
+    depends_on:
+      storeDB:
+        condition: service_healthy
+      ganache:
+        condition: service_started
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@storeDB/store
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      BLOCKCHAIN_URL: http://ganache:8545
+      OWNER_PRIVATE_KEY: ${OWNER_PRIVATE_KEY}
+    ports:
+      - "5001:5000"
+    networks:
+      - store_network
+    restart: on-failure
+
+  customer:
+    build:
+      context: ./applications/customer
+      dockerfile: Dockerfile
+    depends_on:
+      storeDB:
+        condition: service_healthy
+      ganache:
+        condition: service_started
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@storeDB/store
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      BLOCKCHAIN_URL: http://ganache:8545
+      OWNER_PRIVATE_KEY: ${OWNER_PRIVATE_KEY}
+    ports:
+      - "5002:5000"
+    networks:
+      - store_network
+    restart: on-failure
+
+  courier:
+    build:
+      context: ./applications/courier
+      dockerfile: Dockerfile
+    depends_on:
+      storeDB:
+        condition: service_healthy
+      ganache:
+        condition: service_started
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@storeDB/store
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      BLOCKCHAIN_URL: http://ganache:8545
+      OWNER_PRIVATE_KEY: ${OWNER_PRIVATE_KEY}
+    ports:
+      - "5003:5000"
+    networks:
+      - store_network
+    restart: on-failure
+
+# =============================================
+# NETWORKS - Complete Isolation
+# =============================================
+
+networks:
+  auth_network:
+    driver: bridge
+  store_network:
+    driver: bridge
+
+# =============================================
+# VOLUMES - Data Persistence
+# =============================================
+
+volumes:
+  auth_data:
+  store_data:
