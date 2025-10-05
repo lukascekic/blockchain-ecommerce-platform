@@ -2,13 +2,14 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Copy shared models and config first
-COPY ../configuration.py ../models.py ./
+# Copy shared configuration and models
+COPY applications/configuration.py applications/models.py ./
 
-COPY requirements.txt .
+# Copy owner application
+COPY applications/owner/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY applications/owner/application.py .
 
 ENV FLASK_APP=application.py
 ENV PYTHONUNBUFFERED=1

@@ -16,24 +16,24 @@ def validate_registration_data(data, role):
     Vraća (error_message, status_code) ili (None, None) ako je sve ok.
     """
     # 1. Provera forename
-    if 'forename' not in data or not data['forename'] or data['forename'].strip() == '':
+    if 'forename' not in data or not data['forename']:
         return {"message": "Field forename is missing."}, 400
 
     # 2. Provera surname
-    if 'surname' not in data or not data['surname'] or data['surname'].strip() == '':
+    if 'surname' not in data or not data['surname']:
         return {"message": "Field surname is missing."}, 400
 
     # 3. Provera email
-    if 'email' not in data or not data['email'] or data['email'].strip() == '':
+    if 'email' not in data or not data['email']:
         return {"message": "Field email is missing."}, 400
 
-    # 4. Email format validacija
+    # 4. Provera password (MORA PRE email format validacije!)
+    if 'password' not in data or not data['password']:
+        return {"message": "Field password is missing."}, 400
+
+    # 5. Email format validacija
     if not re.match(EMAIL_REGEX, data['email']):
         return {"message": "Invalid email."}, 400
-
-    # 5. Provera password
-    if 'password' not in data or not data['password'] or data['password'].strip() == '':
-        return {"message": "Field password is missing."}, 400
 
     # 6. Password length validacija
     if len(data['password']) < 8:
@@ -112,11 +112,11 @@ def login():
     data = request.get_json()
 
     # 1. Provera email
-    if 'email' not in data or not data['email'] or data['email'].strip() == '':
+    if 'email' not in data or not data['email']:
         return jsonify({"message": "Field email is missing."}), 400
 
     # 2. Provera password
-    if 'password' not in data or not data['password'] or data['password'].strip() == '':
+    if 'password' not in data or not data['password']:
         return jsonify({"message": "Field password is missing."}), 400
 
     # 3. Email format validacija

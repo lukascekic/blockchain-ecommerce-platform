@@ -1,0 +1,528 @@
+PS C:\Users\Luka\OneDrive\Desktop\Projekti\IEPprojekat> docker-compose --profile test up tests
+time="2025-10-05T15:38:53+02:00" level=warning msg="C:\\Users\\Luka\\OneDrive\\Desktop\\Projekti\\IEPprojekat\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Attaching to tests-1
+tests-1  | RUNNING AUTHENTICATION TESTS
+tests-1  | ==============================
+tests-1  | AUTHENTICATION = 100.00%
+tests-1  | ==============================
+tests-1  | RUNNING LEVEL 0 TESTS
+tests-1  | ==============================
+tests-1  | SKIPPED 0
+tests-1  | Failed test number 1
+tests-1  |       method = post
+tests-1  |       url = http://owner:5000/update
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Field file is missing.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | Failed test number 2
+tests-1  |       method = post
+tests-1  |       url = http://owner:5000/update
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Field file is missing.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | SKIPPED 7
+tests-1  | Failed test number 10
+tests-1  |       method = post
+tests-1  |       url = http://owner:5000/update
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {'file': <_io.TextIOWrapper name='temp.csv' mode='r' encoding='UTF-8'>}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 11
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 12
+tests-1  |       method = post
+tests-1  |       url = http://owner:5000/update
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {'file': <_io.TextIOWrapper name='temp.csv' mode='r' encoding='UTF-8'>}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 400, received 401
+tests-1  | Failed test number 13
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 14
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search?name=0
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 15
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search?name=2
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 16
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search?category=5
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 17
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/search?category=5,name=0
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | LEVEL 0 = 1.67%
+tests-1  | ==============================
+tests-1  | RUNNING LEVEL 1 TESTS
+tests-1  | ==============================
+tests-1  | SKIPPED 0
+tests-1  | Failed test number 1
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Field requests is missing.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | Failed test number 2
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1 exited with code 0
+
+
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Field requests is missing.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | Failed test number 5
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {'requests': [{'id': 1, 'quantity': 1}, {'id': 1}]}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Invalid product for request number 0.'}
+tests-1  |       error: Invalid response, expected {'message': 'Product quantity is missing for request number 1.'}, received {'message': 'Invalid product for request number 0.'}.
+tests-1  | SKIPPED 11
+tests-1  | SKIPPED 12
+tests-1  | SKIPPED 13
+tests-1  | SKIPPED 14
+tests-1  | Failed test number 17
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {'requests': [{'id': 'Product0', 'quantity': 2}, {'id': 'Product1', 'quantity': 3}]}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'products'
+tests-1  | Failed test number 18
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 19
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {'requests': [{'id': 'Product0', 'quantity': 2}, {'id': 'Product1', 'quantity': 8}]}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'products'
+tests-1  | Failed test number 20
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | LEVEL 1 = 1.92%
+tests-1  | ==============================
+tests-1  | RUNNING LEVEL 2 TESTS
+tests-1  | ==============================
+tests-1  | SKIPPED 0
+tests-1  | SKIPPED 1
+tests-1  | SKIPPED 2
+tests-1  | SKIPPED 3
+tests-1  | SKIPPED 4
+tests-1  | SKIPPED 5
+tests-1  | SKIPPED 6
+tests-1  | SKIPPED 7
+tests-1  | SKIPPED 8
+tests-1  | Failed test number 9
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Missing order id.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | Failed test number 13
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {'id': 10000000000}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 400, received 401
+tests-1  | SKIPPED 14
+tests-1  | SKIPPED 15
+tests-1  | SKIPPED 16
+tests-1  | Failed test number 17
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | SKIPPED 18
+tests-1  | Failed test number 19
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'message': 'Missing order id.'}
+tests-1  |       error: Invalid status code, expected 401, received 400
+tests-1  | Failed test number 23
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {'id': 10000000000}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 400, received 401
+tests-1  | Failed test number 24
+tests-1  |       method = get
+tests-1  |       url = http://courier:5000/orders_to_deliver
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 25
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/generate_invoice
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 26
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 27
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/generate_invoice
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 28
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 29
+tests-1  |       method = get
+tests-1  |       url = http://courier:5000/orders_to_deliver
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 30
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 31
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: list index out of range
+tests-1  | Failed test number 32
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: list index out of range
+tests-1  | Failed test number 33
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 34
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: list index out of range
+tests-1  | LEVEL 2 = -4.09%
+tests-1  | ==============================
+tests-1  | RUNNING LEVEL 3 TESTS
+tests-1  | ==============================
+tests-1  | SKIPPED 0
+tests-1  | SKIPPED 3
+tests-1  | Failed test number 6
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 7
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 8
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/generate_invoice
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 9
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 10
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: pop from empty list
+tests-1  | Failed test number 11
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 12
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 13
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {'requests': [{'id': 'Product4', 'quantity': 22}, {'id': 'Product6', 'quantity': 22}]}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'products'
+tests-1  | Failed test number 14
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 15
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 16
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 17
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/generate_invoice
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 18
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 19
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: pop from empty list
+tests-1  | Failed test number 20
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 21
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 22
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 23
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/order
+tests-1  |       headers = {}
+tests-1  |       data = {'requests': [{'id': 'Product5', 'quantity': 30}]}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'products'
+tests-1  | Failed test number 24
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 25
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 26
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 27
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/generate_invoice
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 28
+tests-1  |       method = post
+tests-1  |       url = http://courier:5000/pick_up_order
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: 'orders'
+tests-1  | Failed test number 29
+tests-1  |       method = post
+tests-1  |       url = http://customer:5000/delivered
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: pop from empty list
+tests-1  | Failed test number 30
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/product_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 31
+tests-1  |       method = get
+tests-1  |       url = http://owner:5000/category_statistics
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | Failed test number 32
+tests-1  |       method = get
+tests-1  |       url = http://customer:5000/status
+tests-1  |       headers = {}
+tests-1  |       data = {}
+tests-1  |       files = {}
+tests-1  |       response = {'msg': 'Missing Authorization Header'}
+tests-1  |       error: Invalid status code, expected 200, received 401
+tests-1  | LEVEL 3 = -0.97%
+tests-1  | ==============================
+tests-1  | SCORE = 19.71%

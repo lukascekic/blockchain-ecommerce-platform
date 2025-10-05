@@ -2,13 +2,17 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Copy shared models and config first
-COPY ../configuration.py ../models.py ./
+# Copy shared configuration and models
+COPY applications/configuration.py applications/models.py ./
 
-COPY requirements.txt .
+# Copy blockchain folder
+COPY blockchain ./blockchain
+
+# Copy customer application
+COPY applications/customer/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY applications/customer/application.py .
 
 ENV FLASK_APP=application.py
 ENV PYTHONUNBUFFERED=1

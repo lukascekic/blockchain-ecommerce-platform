@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Add blockchain directory to path
-blockchain_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'blockchain'))
+blockchain_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'blockchain'))
 sys.path.insert(0, blockchain_path)
 
 from flask import request, jsonify
@@ -132,7 +132,7 @@ def order():
         if not web3.is_address(customer_address):
             return jsonify({"message": "Invalid address."}), 400
 
-    # Validate each request
+    # FIRST: Validate structure and types for ALL requests
     for index, req in enumerate(requests_list):
         # Check if 'id' is missing
         if 'id' not in req:
@@ -158,7 +158,9 @@ def order():
         except (ValueError, TypeError):
             return jsonify({"message": f"Invalid product quantity for request number {index}."}), 400
 
-        # Check if product exists
+    # SECOND: Check if all products exist (after structural validation)
+    for index, req in enumerate(requests_list):
+        product_id = int(req['id'])
         product = Product.query.filter_by(id=product_id).first()
         if not product:
             return jsonify({"message": f"Invalid product for request number {index}."}), 400

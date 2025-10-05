@@ -68,8 +68,8 @@ services:
 
   owner:
     build:
-      context: ./applications/owner
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: applications/owner/Dockerfile
     depends_on:
       storeDB:
         condition: service_healthy
@@ -88,8 +88,8 @@ services:
 
   customer:
     build:
-      context: ./applications/customer
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: applications/customer/Dockerfile
     depends_on:
       storeDB:
         condition: service_healthy
@@ -108,8 +108,8 @@ services:
 
   courier:
     build:
-      context: ./applications/courier
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: applications/courier/Dockerfile
     depends_on:
       storeDB:
         condition: service_healthy
@@ -125,6 +125,36 @@ services:
     networks:
       - store_network
     restart: on-failure
+
+  tests:
+    build:
+      context: ./Tests
+      dockerfile: Dockerfile
+    depends_on:
+      authentication:
+        condition: service_started
+      owner:
+        condition: service_started
+      customer:
+        condition: service_started
+      courier:
+        condition: service_started
+    networks:
+      - auth_network
+      - store_network
+    command: >
+      python main.py --type all
+      --authentication-url http://authentication:5000
+      --jwt-secret JWT_SECRET_DEV_KEY
+      --roles-field roles
+      --owner-role owner
+      --customer-role customer
+      --courier-role courier
+      --owner-url http://owner:5000
+      --customer-url http://customer:5000
+      --courier-url http://courier:5000
+    profiles:
+      - test
 
 # =============================================
 # NETWORKS - Complete Isolation

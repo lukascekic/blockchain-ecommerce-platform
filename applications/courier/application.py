@@ -5,7 +5,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Add blockchain directory to path
-blockchain_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'blockchain'))
+blockchain_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'blockchain'))
 sys.path.insert(0, blockchain_path)
 
 from flask import request, jsonify
