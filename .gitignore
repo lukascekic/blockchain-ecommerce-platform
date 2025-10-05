@@ -41,3 +41,5 @@ blockchain/*.txt
 
 # Tests
 Tests/__pycache__/
+
+Explanations/.stfolder/
