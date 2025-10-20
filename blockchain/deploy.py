@@ -2,68 +2,45 @@ import json
 import os
 from web3 import Web3
 
-# Load contract ABI and bytecode
 def load_contract_data():
-    """Load compiled contract ABI and bytecode"""
-    contract_dir = os.path.dirname(__file__)
+    dir_path = os.path.dirname(__file__)
 
-    abi_path = os.path.join(contract_dir, 'contract_abi.json')
-    with open(abi_path, 'r') as file:
-        abi = json.load(file)
+    abi_file = os.path.join(dir_path, 'contract_abi.json')
+    with open(abi_file, 'r') as f:
+        contract_abi = json.load(f)
 
-    bytecode_path = os.path.join(contract_dir, 'contract_bytecode.txt')
-    with open(bytecode_path, 'r') as file:
-        bytecode = file.read()
+    bytecode_file = os.path.join(dir_path, 'contract_bytecode.txt')
+    with open(bytecode_file, 'r') as f:
+        contract_bytecode = f.read()
 
-    return abi, bytecode
+    return contract_abi, contract_bytecode
 
 
 def deploy_payment_contract(web3, owner_private_key, customer_address, amount_wei):
-    """
-    Deploy a new PaymentContract to the blockchain.
+    contract_abi, contract_bytecode = load_contract_data()
 
-    Args:
-        web3: Web3 instance connected to Ganache
-        owner_private_key: Private key of the owner (deployer)
-        customer_address: Ethereum address of the customer
-        amount_wei: Payment amount in wei
+    owner_acc = web3.eth.account.from_key(owner_private_key)
+    owner_addr = owner_acc.address
 
-    Returns:
-        contract_address: Address of the deployed contract
-    """
-    # Load contract data
-    abi, bytecode = load_contract_data()
+    contract = web3.eth.contract(abi=contract_abi, bytecode=contract_bytecode)
 
-    # Get owner account from private key
-    owner_account = web3.eth.account.from_key(owner_private_key)
-    owner_address = owner_account.address
+    constructor = contract.constructor(customer_address, amount_wei)
 
-    # Create contract instance
-    PaymentContract = web3.eth.contract(abi=abi, bytecode=bytecode)
+    gas_est = constructor.estimate_gas({'from': owner_addr})
 
-    # Build constructor transaction
-    constructor_tx = PaymentContract.constructor(customer_address, amount_wei)
-
-    # Estimate gas
-    gas_estimate = constructor_tx.estimate_gas({'from': owner_address})
-
-    # Build transaction
-    transaction = constructor_tx.build_transaction({
-        'from': owner_address,
-        'nonce': web3.eth.get_transaction_count(owner_address),
-        'gas': gas_estimate,
+    tx = constructor.build_transaction({
+        'from': owner_addr,
+        'nonce': web3.eth.get_transaction_count(owner_addr),
+        'gas': gas_est,
         'gasPrice': web3.eth.gas_price
     })
 
-    # Sign transaction
-    signed_tx = web3.eth.account.sign_transaction(transaction, owner_private_key)
+    signed = web3.eth.account.sign_transaction(tx, owner_private_key)
 
-    # Send transaction
-    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    hash_tx = web3.eth.send_raw_transaction(signed.raw_transaction)
 
-    # Wait for transaction receipt
-    tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    receipt = web3.eth.wait_for_transaction_receipt(hash_tx)
 
-    contract_address = tx_receipt.contractAddress
+    addr = receipt.contractAddress
 
-    return contract_address
+    return addr

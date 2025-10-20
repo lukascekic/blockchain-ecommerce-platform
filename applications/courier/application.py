@@ -58,11 +58,6 @@ def pick_up_order():
     except (ValueError, TypeError):
         return jsonify({"message": "Invalid order id."}), 400
 
-    courier_address = req_data.get('address', None)
-    if courier_address:
-        if not web3.is_address(courier_address):
-            return jsonify({"message": "Invalid address."}), 400
-
     order = Order.query.filter_by(id=order_id).first()
 
     if not order:
@@ -71,7 +66,18 @@ def pick_up_order():
     if order.status != 'CREATED':
         return jsonify({"message": "Invalid order id."}), 400
 
-    if order.contract_address and courier_address:
+    if 'address' not in req_data:
+        return jsonify({"message": "Missing address."}), 400
+
+    courier_address = req_data['address']
+
+    if not courier_address:
+        return jsonify({"message": "Missing address."}), 400
+
+    if not web3.is_address(courier_address):
+        return jsonify({"message": "Invalid address."}), 400
+
+    if order.contract_address:
         if not check_is_paid(web3, order.contract_address):
             return jsonify({"message": "Transfer not complete."}), 400
 

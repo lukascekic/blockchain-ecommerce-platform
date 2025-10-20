@@ -17,7 +17,7 @@ import json
 GANACHE_URL = os.environ.get('GANACHE_URL', 'http://ganache:8545')
 web3 = Web3(Web3.HTTPProvider(GANACHE_URL))
 
-OWNER_PRIVATE_KEY = None
+OWNER_PRIVATE_KEY = os.environ.get('OWNER_PRIVATE_KEY', None)
 
 from deploy import deploy_payment_contract
 from utils import check_is_paid, build_pay_transaction, confirm_delivery_tx
@@ -188,6 +188,7 @@ def order():
 
 
 @application.route('/pay', methods=['POST'])
+@application.route('/generate_invoice', methods=['POST'])
 @jwt_required()
 def pay():
     user_roles = get_jwt().get('roles', [])
@@ -208,14 +209,6 @@ def pay():
     except (ValueError, TypeError):
         return jsonify({"message": "Invalid order id."}), 400
 
-    if 'address' not in json_data:
-        return jsonify({"message": "Missing address."}), 400
-
-    customer_address = json_data['address']
-
-    if not web3.is_address(customer_address):
-        return jsonify({"message": "Invalid address."}), 400
-
     order = Order.query.filter_by(id=order_id).first()
 
     if not order:
@@ -226,6 +219,17 @@ def pay():
 
     if not order.contract_address:
         return jsonify({"message": "Invalid order id."}), 400
+
+    if 'address' not in json_data:
+        return jsonify({"message": "Missing address."}), 400
+
+    customer_address = json_data['address']
+
+    if not customer_address:
+        return jsonify({"message": "Missing address."}), 400
+
+    if not web3.is_address(customer_address):
+        return jsonify({"message": "Invalid address."}), 400
 
     if check_is_paid(web3, order.contract_address):
         return jsonify({"message": "Transfer already complete."}), 400
@@ -238,7 +242,7 @@ def pay():
         amount_wei
     )
 
-    return jsonify({"invoice": json.dumps(transaction)}), 200
+    return jsonify({"invoice": transaction}), 200
 
 
 @application.route('/status', methods=['GET'])
@@ -332,25 +336,5 @@ def delivered():
 if __name__ == '__main__':
     with application.app_context():
         database.create_all()
-
-    if web3.is_connected():
-        owner_account = web3.eth.account.create()
-        OWNER_PRIVATE_KEY = owner_account.key.hex()
-
-        try:
-            ganache_accounts = web3.eth.accounts
-            if ganache_accounts:
-                tx_hash = web3.eth.send_transaction({
-                    'from': ganache_accounts[0],
-                    'to': owner_account.address,
-                    'value': web3.to_wei(100, 'ether')
-                })
-                web3.eth.wait_for_transaction_receipt(tx_hash)
-                print("Owner account created: {}".format(owner_account.address))
-                print("Owner funded with 100 ETH")
-        except Exception as error:
-            print("Warning: Could not fund owner account: {}".format(error))
-    else:
-        print("Warning: Blockchain not connected. Blockchain features disabled.")
 
     application.run(host='0.0.0.0', port=5000, debug=True)

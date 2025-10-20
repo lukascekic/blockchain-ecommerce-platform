@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # =============================================
-  # AUTHENTICATION NETWORK - Isolated
-  # =============================================
 
   authenticationDB:
     image: mysql:8.0
@@ -37,9 +34,6 @@ services:
       - auth_network
     restart: on-failure
 
-  # =============================================
-  # STORE NETWORK - Isolated
-  # =============================================
 
   storeDB:
     image: mysql:8.0
@@ -157,13 +151,13 @@ services:
       --courier-role courier
       --owner-url http://owner:5000
       --customer-url http://customer:5000
-      --courier-url http://courier:5000"
+      --courier-url http://courier:5000
+      --with-blockchain
+      --provider-url http://ganache:8545
+      --owner-private-key 0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d"
     profiles:
       - test
 
-# =============================================
-# NETWORKS - Complete Isolation
-# =============================================
 
 networks:
   auth_network:
@@ -171,9 +165,6 @@ networks:
   store_network:
     driver: bridge
 
-# =============================================
-# VOLUMES - Data Persistence
-# =============================================
 
 volumes:
   auth_data:
