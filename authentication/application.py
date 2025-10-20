@@ -190,12 +190,12 @@ def initialize_database():
         )
         database.session.add(owner)
         database.session.commit()
-        print("✅ Default owner kreiran: onlymoney@gmail.com")
+        print("[OK] Default owner kreiran: onlymoney@gmail.com")
+
+# Inicijalizacija baze ODMAH pri importu modula (pre debug reloader-a)
+with application.app_context():
+    initialize_database()
 
 if __name__ == '__main__':
-    # Inicijalizacija baze pri pokretanju
-    with application.app_context():
-        initialize_database()
-
     # Pokretanje Flask aplikacije
     application.run(debug=True, host='0.0.0.0', port=5000)

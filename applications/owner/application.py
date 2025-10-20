@@ -151,13 +151,6 @@ def product_statistics():
         Order, OrderItem.order_id == Order.id
     ).group_by(
         Product.id, Product.name
-    ).having(
-        func.sum(
-            case(
-                (Order.status == 'COMPLETE', OrderItem.quantity),
-                else_=0
-            )
-        ) > 0
     ).all()
 
     statistics = [
@@ -178,32 +171,43 @@ def product_statistics():
 def category_statistics():
     """
     Returns list of categories ordered by number of sold products.
-    Only includes categories from COMPLETE orders.
-    Order: by count DESC, then by name ASC.
+    Includes ALL categories that have products, sorted by COMPLETE order count.
+    Order: by count DESC (COMPLETE orders only), then by name ASC.
     """
     # Query:
-    # - Join Category -> ProductCategory -> Product -> OrderItem -> Order
-    # - Filter: Order.status = 'COMPLETE'
-    # - SUM quantity grouped by category
-    # - ORDER BY count DESC, name ASC
+    # - LEFT JOIN to include categories even if no COMPLETE orders
+    # - Calculate sold count from COMPLETE orders only
+    # - ORDER BY sold count DESC, name ASC
 
-    stats = database.session.query(
-        Category.name,
-        func.sum(OrderItem.quantity).label('count')
+    # Subquery to count sold items from COMPLETE orders per category
+    sold_subquery = database.session.query(
+        Category.id.label('category_id'),
+        func.sum(
+            case(
+                (Order.status == 'COMPLETE', OrderItem.quantity),
+                else_=0
+            )
+        ).label('sold_count')
     ).join(
         ProductCategory, Category.id == ProductCategory.category_id
     ).join(
         Product, ProductCategory.product_id == Product.id
-    ).join(
+    ).outerjoin(
         OrderItem, Product.id == OrderItem.product_id
-    ).join(
+    ).outerjoin(
         Order, OrderItem.order_id == Order.id
-    ).filter(
-        Order.status == 'COMPLETE'
     ).group_by(
-        Category.id, Category.name
+        Category.id
+    ).subquery()
+
+    # Main query: sve kategorije sa sold_count
+    stats = database.session.query(
+        Category.name,
+        func.coalesce(sold_subquery.c.sold_count, 0).label('count')
+    ).outerjoin(
+        sold_subquery, Category.id == sold_subquery.c.category_id
     ).order_by(
-        func.sum(OrderItem.quantity).desc(),
+        func.coalesce(sold_subquery.c.sold_count, 0).desc(),
         Category.name.asc()
     ).all()
 

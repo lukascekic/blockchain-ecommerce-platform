@@ -131,6 +131,10 @@ services:
       context: ./Tests
       dockerfile: Dockerfile
     depends_on:
+      authenticationDB:
+        condition: service_healthy
+      storeDB:
+        condition: service_healthy
       authentication:
         condition: service_started
       owner:
@@ -143,7 +147,8 @@ services:
       - auth_network
       - store_network
     command: >
-      python main.py --type all
+      sh -c "python reset_databases.py && python main.py --type all
+      --with-authentication
       --authentication-url http://authentication:5000
       --jwt-secret JWT_SECRET_DEV_KEY
       --roles-field roles
@@ -152,7 +157,7 @@ services:
       --courier-role courier
       --owner-url http://owner:5000
       --customer-url http://customer:5000
-      --courier-url http://courier:5000
+      --courier-url http://courier:5000"
     profiles:
       - test
 
