@@ -1,6 +1,5 @@
 from configuration import database
 
-# Many-to-many association table za Product i Category
 class ProductCategory(database.Model):
     __tablename__ = 'product_categories'
 
@@ -8,7 +7,7 @@ class ProductCategory(database.Model):
     category_id = database.Column(database.Integer, database.ForeignKey('categories.id'), primary_key=True)
 
     def __repr__(self):
-        return f'<ProductCategory product_id={self.product_id} category_id={self.category_id}>'
+        return '<ProductCategory product_id=%d category_id=%d>' % (self.product_id, self.category_id)
 
 
 class Product(database.Model):
@@ -18,7 +17,6 @@ class Product(database.Model):
     name = database.Column(database.String(256), nullable=False, unique=True)
     price = database.Column(database.Float, nullable=False)
 
-    # Relationships
     categories = database.relationship(
         'Category',
         secondary='product_categories',
@@ -27,7 +25,7 @@ class Product(database.Model):
     order_items = database.relationship('OrderItem', back_populates='product')
 
     def __repr__(self):
-        return f'<Product {self.name} (${self.price})>'
+        return '<Product {} (${})>'.format(self.name, self.price)
 
 
 class Category(database.Model):
@@ -36,7 +34,6 @@ class Category(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(256), nullable=False, unique=True)
 
-    # Relationships
     products = database.relationship(
         'Product',
         secondary='product_categories',
@@ -44,7 +41,7 @@ class Category(database.Model):
     )
 
     def __repr__(self):
-        return f'<Category {self.name}>'
+        return '<Category {}>'.format(self.name)
 
 
 class Order(database.Model):
@@ -53,19 +50,17 @@ class Order(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     customer_email = database.Column(database.String(256), nullable=False)
     price = database.Column(database.Float, nullable=False)
-    status = database.Column(database.String(64), nullable=False, default='CREATED')  # CREATED, PENDING, COMPLETE
+    status = database.Column(database.String(64), nullable=False, default='CREATED')
     timestamp = database.Column(database.DateTime, nullable=False)
 
-    # Blockchain fields (nullable jer se koriste samo sa blockchain-om)
     contract_address = database.Column(database.String(256), nullable=True)
     customer_address = database.Column(database.String(256), nullable=True)
 
-    # Relationships
     items = database.relationship('OrderItem', back_populates='order', cascade='all, delete-orphan')
     courier_info = database.relationship('CourierAssignment', back_populates='order', uselist=False, cascade='all, delete-orphan')
 
     def __repr__(self):
-        return f'<Order {self.id} - {self.customer_email} (${self.price}) [{self.status}]>'
+        return '<Order %d - %s ($%s) [%s]>' % (self.id, self.customer_email, self.price, self.status)
 
 
 class OrderItem(database.Model):
@@ -75,14 +70,13 @@ class OrderItem(database.Model):
     order_id = database.Column(database.Integer, database.ForeignKey('orders.id'), nullable=False)
     product_id = database.Column(database.Integer, database.ForeignKey('products.id'), nullable=False)
     quantity = database.Column(database.Integer, nullable=False)
-    price = database.Column(database.Float, nullable=False)  # Cena u trenutku kupovine
+    price = database.Column(database.Float, nullable=False)
 
-    # Relationships
     order = database.relationship('Order', back_populates='items')
     product = database.relationship('Product', back_populates='order_items')
 
     def __repr__(self):
-        return f'<OrderItem order={self.order_id} product={self.product_id} qty={self.quantity}>'
+        return '<OrderItem order={} product={} qty={}>'.format(self.order_id, self.product_id, self.quantity)
 
 
 class CourierAssignment(database.Model):
@@ -90,10 +84,9 @@ class CourierAssignment(database.Model):
 
     id = database.Column(database.Integer, primary_key=True)
     order_id = database.Column(database.Integer, database.ForeignKey('orders.id'), unique=True, nullable=False)
-    courier_address = database.Column(database.String(256), nullable=False)  # Blockchain adresa kurira
+    courier_address = database.Column(database.String(256), nullable=False)
 
-    # Relationship
     order = database.relationship('Order', back_populates='courier_info')
 
     def __repr__(self):
-        return f'<CourierAssignment order={self.order_id} courier={self.courier_address}>'
+        return '<CourierAssignment order={} courier={}>'.format(self.order_id, self.courier_address)

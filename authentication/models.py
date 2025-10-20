@@ -11,4 +11,4 @@ class User(database.Model):
     role = database.Column(database.String(64), nullable=False)
 
     def __repr__(self):
-        return f'<User {self.email} ({self.role})>'
+        return '<User %s (%s)>' % (self.email, self.role)
