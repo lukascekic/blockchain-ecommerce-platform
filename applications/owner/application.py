@@ -98,25 +98,27 @@ def product_statistics():
     if 'owner' not in user_roles:
         return jsonify({"msg": "Missing Authorization Header"}), 401
 
-    all_products = Product.query.join(OrderItem).join(Order).all()
+    sold_items = database.session.query(
+        Product.name,
+        database.func.sum(OrderItem.quantity).label('total')
+    ).join(OrderItem).join(Order).filter(Order.status == 'COMPLETE').group_by(Product.name).all()
 
-    product_stats = {}
-    for product in all_products:
-        if product.name not in product_stats:
-            product_stats[product.name] = {'sold': 0, 'waiting': 0}
+    waiting_items = database.session.query(
+        Product.name,
+        database.func.sum(OrderItem.quantity).label('total')
+    ).join(OrderItem).join(Order).filter(Order.status.in_(['CREATED', 'PENDING'])).group_by(Product.name).all()
 
-        for item in product.order_items:
-            if item.order.status == 'COMPLETE':
-                product_stats[product.name]['sold'] += item.quantity
-            elif item.order.status in ['CREATED', 'PENDING']:
-                product_stats[product.name]['waiting'] += item.quantity
+    sold_dict = {item.name: int(item.total) for item in sold_items}
+    waiting_dict = {item.name: int(item.total) for item in waiting_items}
+
+    all_names = set(sold_dict.keys()) | set(waiting_dict.keys())
 
     statistics = []
-    for name, stats in product_stats.items():
+    for name in all_names:
         statistics.append({
             "name": name,
-            "sold": int(stats['sold']),
-            "waiting": int(stats['waiting'])
+            "sold": sold_dict.get(name, 0),
+            "waiting": waiting_dict.get(name, 0)
         })
 
     return jsonify({"statistics": statistics}), 200
@@ -131,25 +133,26 @@ def category_statistics():
 
     all_categories = Category.query.all()
 
-    category_counts = []
+    sold_by_category = database.session.query(
+        Category.name,
+        database.func.sum(OrderItem.quantity).label('total')
+    ).join(ProductCategory, Category.id == ProductCategory.category_id)\
+     .join(Product, ProductCategory.product_id == Product.id)\
+     .join(OrderItem, Product.id == OrderItem.product_id)\
+     .join(Order, OrderItem.order_id == Order.id)\
+     .filter(Order.status == 'COMPLETE')\
+     .group_by(Category.name).all()
+
+    sold_dict = {cat.name: int(cat.total) for cat in sold_by_category}
+
+    category_list = []
     for category in all_categories:
-        sold_count = 0
+        total_sold = sold_dict.get(category.name, 0)
+        category_list.append((category.name, total_sold))
 
-        for product in category.products:
-            for order_item in product.order_items:
-                if order_item.order.status == 'COMPLETE':
-                    sold_count += order_item.quantity
+    category_list.sort(key=lambda x: (-x[1], x[0]))
 
-        category_counts.append({
-            'name': category.name,
-            'count': sold_count
-        })
-
-    category_counts.sort(key=lambda x: (-x['count'], x['name']))
-
-    statistics = []
-    for item in category_counts:
-        statistics.append(item['name'])
+    statistics = [cat[0] for cat in category_list]
 
     return jsonify({"statistics": statistics}), 200
 

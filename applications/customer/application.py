@@ -62,9 +62,11 @@ def search():
 
     products_list = []
     for product in products:
-        product_categories = []
-        for cat in product.categories:
-            product_categories.append(cat.name)
+        categories_query = database.session.query(Category.name).join(
+            ProductCategory
+        ).filter(ProductCategory.product_id == product.id).all()
+
+        product_categories = [cat.name for cat in categories_query]
 
         products_list.append({
             "categories": product_categories,
@@ -95,11 +97,6 @@ def order():
 
     requests_list = req_body['requests']
 
-    customer_address = req_body.get('address', None)
-    if customer_address:
-        if not web3.is_address(customer_address):
-            return jsonify({"message": "Invalid address."}), 400
-
     for index, req in enumerate(requests_list):
         if 'id' not in req:
             return jsonify({"message": "Product id is missing for request number {}.".format(index)}), 400
@@ -126,6 +123,14 @@ def order():
         product = Product.query.filter_by(id=product_id).first()
         if not product:
             return jsonify({"message": "Invalid product for request number {}.".format(index)}), 400
+
+    if 'address' not in req_body or not req_body['address']:
+        return jsonify({"message": "Field address is missing."}), 400
+
+    customer_address = req_body['address']
+
+    if not web3.is_address(customer_address):
+        return jsonify({"message": "Invalid address."}), 400
 
     try:
         total_price = 0.0
@@ -217,19 +222,16 @@ def pay():
     if order.customer_email != customer_email:
         return jsonify({"message": "Invalid order id."}), 400
 
-    if not order.contract_address:
-        return jsonify({"message": "Invalid order id."}), 400
-
     if 'address' not in json_data:
         return jsonify({"message": "Missing address."}), 400
 
     customer_address = json_data['address']
 
-    if not customer_address:
-        return jsonify({"message": "Missing address."}), 400
-
-    if not web3.is_address(customer_address):
+    if not customer_address or not web3.is_address(customer_address):
         return jsonify({"message": "Invalid address."}), 400
+
+    if not order.contract_address:
+        return jsonify({"message": "Invalid order id."}), 400
 
     if check_is_paid(web3, order.contract_address):
         return jsonify({"message": "Transfer already complete."}), 400
@@ -258,16 +260,24 @@ def status():
 
     orders_list = []
     for order in orders:
+        items_query = database.session.query(
+            OrderItem.quantity,
+            OrderItem.price,
+            Product.id.label('product_id'),
+            Product.name.label('product_name')
+        ).join(Product).filter(OrderItem.order_id == order.id).all()
+
         products = []
-        for item in order.items:
-            product = item.product
-            product_categories = []
-            for cat in product.categories:
-                product_categories.append(cat.name)
+        for item in items_query:
+            categories_query = database.session.query(Category.name).join(
+                ProductCategory
+            ).filter(ProductCategory.product_id == item.product_id).all()
+
+            product_categories = [cat.name for cat in categories_query]
 
             products.append({
                 "categories": product_categories,
-                "name": product.name,
+                "name": item.product_name,
                 "price": item.price,
                 "quantity": item.quantity
             })
