@@ -1,17 +1,17 @@
-# IEP Projekat - Sistem za upravljanje prodavnicom
+# E-Commerce Platform with Blockchain Payment Integration
 
-Mikroservisni sistem za e-trgovinu sa blockchain plaćanjem implementiran korišćenjem Python, Flask, MySQL, i Ethereum blockchain platforme.
+Microservices-based e-commerce system with blockchain payment processing built using Python, Flask, MySQL, and Ethereum blockchain platform.
 
-## Pregled
+## Overview
 
-Sistem se sastoji iz sledećih komponenti:
-- **Authentication servis** - Registracija, prijava i autentikacija korisnika
-- **Owner servis** - Upravljanje proizvodima i statistike
-- **Customer servis** - Pretraga, naručivanje, plaćanje
-- **Courier servis** - Preuzimanje i dostava narudžbina
-- **Blockchain** - Ethereum smart contracts za payment processing
+The system consists of the following components:
+- **Authentication service** - User registration, login, and authentication
+- **Owner service** - Product management and statistics
+- **Customer service** - Product search, ordering, payment
+- **Courier service** - Order pickup and delivery
+- **Blockchain** - Ethereum smart contracts for payment processing
 
-## Arhitektura
+## Architecture
 
 ```
 Authentication Network (Isolated)
@@ -26,42 +26,42 @@ Store Network (Isolated)
 └── courier service
 ```
 
-## Pokretanje Sistema
+## Getting Started
 
-### Preduslovi
+### Prerequisites
 - Docker
 - Docker Compose
 
 ### Setup
 
-1. **Klonirati projekat**
+1. **Clone the repository**
 ```bash
 git clone <repo-url>
-cd IEPprojekat
+cd blockchain-ecommerce-platform
 ```
 
-2. **Konfigurisati environment varijable**
+2. **Configure environment variables**
 ```bash
 cp .env.example .env
-# OWNER_PRIVATE_KEY će biti automatski generisan pri prvom pokretanju
+# OWNER_PRIVATE_KEY will be automatically generated on first run
 ```
 
-3. **Build i pokretanje**
+3. **Build and start services**
 ```bash
 docker-compose build
 docker-compose up -d
 ```
 
-4. **Provera statusa**
+4. **Check service status**
 ```bash
 docker-compose ps
 ```
 
-## Testiranje
+## Testing
 
-### Pokretanje testova
+### Running Tests
 
-**Authentication testovi:**
+**Authentication tests:**
 ```bash
 python Tests/main.py --type authentication \
   --authentication-url http://127.0.0.1:5000 \
@@ -72,7 +72,7 @@ python Tests/main.py --type authentication \
   --courier-role courier
 ```
 
-**Svi testovi bez blockchain:**
+**All tests without blockchain:**
 ```bash
 python Tests/main.py --type all \
   --with-authentication \
@@ -87,7 +87,7 @@ python Tests/main.py --type all \
   --courier-url http://127.0.0.1:5003
 ```
 
-**Svi testovi sa blockchain:**
+**All tests with blockchain:**
 ```bash
 python Tests/main.py --type all \
   --with-authentication \
@@ -108,28 +108,28 @@ python Tests/main.py --type all \
 ## API Endpoints
 
 ### Authentication Service (Port 5000)
-- `POST /register_customer` - Registracija kupca
-- `POST /register_courier` - Registracija kurira
-- `POST /login` - Prijava korisnika
-- `POST /delete` - Brisanje korisničkog naloga
+- `POST /register_customer` - Register customer account
+- `POST /register_courier` - Register courier account
+- `POST /login` - User login
+- `POST /delete` - Delete user account
 
 ### Owner Service (Port 5001)
-- `POST /update` - Upload proizvoda (CSV)
-- `GET /product_statistics` - Statistike proizvoda
-- `GET /category_statistics` - Statistike kategorija
+- `POST /update` - Upload products (CSV)
+- `GET /product_statistics` - Product statistics
+- `GET /category_statistics` - Category statistics
 
 ### Customer Service (Port 5002)
-- `GET /search` - Pretraga proizvoda
-- `POST /order` - Kreiranje narudžbine
-- `GET /status` - Status narudžbina
-- `POST /generate_invoice` - Generisanje invoice za plaćanje (blockchain)
-- `POST /delivered` - Potvrda dostave
+- `GET /search` - Search products
+- `POST /order` - Create order
+- `GET /status` - Order status
+- `POST /generate_invoice` - Generate payment invoice (blockchain)
+- `POST /delivered` - Confirm delivery
 
 ### Courier Service (Port 5003)
-- `GET /orders_to_deliver` - Lista narudžbina za dostavu
-- `POST /pick_up_order` - Preuzimanje narudžbine
+- `GET /orders_to_deliver` - List orders for delivery
+- `POST /pick_up_order` - Pick up order
 
-## Tehnologije
+## Technologies
 
 - **Backend:** Python 3.9, Flask 2.3.0
 - **Database:** MySQL 8.0
@@ -137,10 +137,10 @@ python Tests/main.py --type all \
 - **Blockchain:** Ethereum (Ganache), Web3.py, Solidity
 - **Deployment:** Docker, Docker Compose
 
-## Struktura Projekta
+## Project Structure
 
 ```
-IEPprojekat/
+blockchain-ecommerce-platform/
 ├── authentication/
 │   ├── application.py
 │   ├── configuration.py
@@ -174,14 +174,14 @@ IEPprojekat/
 
 ## Security
 
-- Network isolation između authentication i store mreža
-- JWT token authentication sa 1h expiracijom
+- Network isolation between authentication and store networks
+- JWT token authentication with 1h expiration
 - Password hashing (SHA256)
 - Blockchain smart contract security
 
-## Default Korisnici
+## Default Users
 
-**Owner (predefinisan):**
+**Owner (predefined):**
 - Email: `onlymoney@gmail.com`
 - Password: `evenmoremoney`
 - Role: `owner`
@@ -196,9 +196,9 @@ docker-compose up -d
 
 **Port already in use:**
 ```bash
-# Promeniti portove u docker-compose.yml
+# Change ports in docker-compose.yml
 ports:
-  - "50XX:5000"  # Promeniti 50XX
+  - "50XX:5000"  # Change 50XX
 ```
 
 **Ganache not responding:**
@@ -208,8 +208,4 @@ docker-compose restart ganache
 
 ## License
 
-ETF Beograd - IEP Projekat 2025
-
-Luka Šćekić
-
-
+University of Belgrade, School of Electrical Engineering - 2025
