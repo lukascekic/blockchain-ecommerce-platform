@@ -2,7 +2,7 @@
 
 Mikroservisni sistem za e-trgovinu sa blockchain plaćanjem implementiran korišćenjem Python, Flask, MySQL, i Ethereum blockchain platforme.
 
-## 📋 Pregled
+## Pregled
 
 Sistem se sastoji iz sledećih komponenti:
 - **Authentication servis** - Registracija, prijava i autentikacija korisnika
@@ -11,7 +11,7 @@ Sistem se sastoji iz sledećih komponenti:
 - **Courier servis** - Preuzimanje i dostava narudžbina
 - **Blockchain** - Ethereum smart contracts za payment processing
 
-## 🏗️ Arhitektura
+## Arhitektura
 
 ```
 Authentication Network (Isolated)
@@ -26,9 +26,9 @@ Store Network (Isolated)
 └── courier service
 ```
 
-## 🚀 Pokretanje Sistema
+## Pokretanje Sistema
 
-### Preduslov
+### Preduslovi
 - Docker
 - Docker Compose
 
@@ -57,7 +57,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-## 🧪 Testiranje
+## Testiranje
 
 ### Pokretanje testova
 
@@ -105,7 +105,7 @@ python Tests/main.py --type all \
   --owner-private-key <OWNER_PRIVATE_KEY>
 ```
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Authentication Service (Port 5000)
 - `POST /register_customer` - Registracija kupca
@@ -129,7 +129,7 @@ python Tests/main.py --type all \
 - `GET /orders_to_deliver` - Lista narudžbina za dostavu
 - `POST /pick_up_order` - Preuzimanje narudžbine
 
-## 🔧 Tehnologije
+## Tehnologije
 
 - **Backend:** Python 3.9, Flask 2.3.0
 - **Database:** MySQL 8.0
@@ -137,7 +137,7 @@ python Tests/main.py --type all \
 - **Blockchain:** Ethereum (Ganache), Web3.py, Solidity
 - **Deployment:** Docker, Docker Compose
 
-## 📂 Struktura Projekta
+## Struktura Projekta
 
 ```
 IEPprojekat/
@@ -172,21 +172,21 @@ IEPprojekat/
 └── README.md
 ```
 
-## 🔒 Security
+## Security
 
 - Network isolation između authentication i store mreža
 - JWT token authentication sa 1h expiracijom
 - Password hashing (SHA256)
 - Blockchain smart contract security
 
-## 👤 Default Korisnici
+## Default Korisnici
 
 **Owner (predefinisan):**
 - Email: `onlymoney@gmail.com`
 - Password: `evenmoremoney`
 - Role: `owner`
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Database connection error:**
 ```bash
@@ -206,10 +206,10 @@ ports:
 docker-compose restart ganache
 ```
 
-## 📝 License
+## License
 
-ETF Beograd - IEP Projekat 2024
+ETF Beograd - IEP Projekat 2025
 
-## 👨‍💻 Autor
+Luka Šćekić
 
-Student projekat - ETF Beograd
+

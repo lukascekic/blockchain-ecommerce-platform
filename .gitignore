@@ -43,3 +43,6 @@ blockchain/*.txt
 Tests/__pycache__/
 
 Explanations/.stfolder/
+
+# Miscellaneous files
+other/
