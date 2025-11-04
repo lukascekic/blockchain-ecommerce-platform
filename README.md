@@ -59,7 +59,21 @@ docker-compose ps
 
 ## Testing
 
-### Running Tests
+### Using Docker (Recommended)
+
+The easiest way to run tests is using the included test container:
+
+```bash
+docker-compose --profile test up --build tests
+```
+
+This will automatically:
+- Build and start all required services
+- Reset databases to clean state
+- Run all tests (authentication + store + blockchain)
+- Display results
+
+### Manual Testing
 
 **Authentication tests:**
 ```bash
